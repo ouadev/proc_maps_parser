@@ -5,7 +5,31 @@ a lightweight library to parse Linux's /proc/[pid]/maps file, which contains the
 A file containing the currently mapped memory regions and
 their access permissions.  See mmap(2) for some further
 information about memory mappings.
+#memory map region
+proc_maps_parser represents a memory region with this C structure.
+```C
+struct procmaps_struct{
+	void* addr_start; 	//< start address of the region
+	void* addr_end; 	//< end address of the region
+	unsigned long length; //<  length of the region by bytes
 
+	char perm[5];		//< permissions rwxp 
+	short is_r;			//< is readible
+	short is_w;			//< is writable	
+	short is_x;			//< is executable
+	short is_p;			//< is private
+
+	long offset;	//< offset
+	
+	char dev[12];	//< the device that backs the region, format major:minor
+	int inode;	//< inode of the file that backs the area
+	char pathname[600];//< the path of the file that backs the area
+	
+	//The next region in the list
+	struct procmaps_struct* next;		//<handler of the chinaed list
+}
+
+```
 # Usage
 from ./examples/map.c
 ```C

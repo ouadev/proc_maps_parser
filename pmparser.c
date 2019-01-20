@@ -33,7 +33,7 @@ procmaps_struct* pmparser_parse(int pid){
 		return NULL;
 	}
 	int ind=0;char buf[3000];
-	char c;
+	int c;
 	procmaps_struct* list_maps=NULL;
 	procmaps_struct* tmp;
 	procmaps_struct* current_node=list_maps;

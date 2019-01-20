@@ -32,7 +32,7 @@ procmaps_struct* pmparser_parse(int pid){
 		fprintf(stderr,"pmparser : cannot open the memory maps, %s\n",strerror(errno));
 		return NULL;
 	}
-	int ind=0;char buf[3000];
+	int ind=0;char buf[PROCMAPS_LINE_MAX_LENGTH];
 	int c;
 	procmaps_struct* list_maps=NULL;
 	procmaps_struct* tmp;
@@ -40,7 +40,7 @@ procmaps_struct* pmparser_parse(int pid){
 	char addr1[20],addr2[20], perm[8], offset[20], dev[10],inode[30],pathname[600];
 	while(1){
 		if( (c=fgetc(file))==EOF ) break;
-		fgets(buf+1,259,file);
+		fgets(buf+1,PROCMAPS_LINE_MAX_LENGTH,file);
 		buf[0]=c;
 		//allocate a node
 		tmp=(procmaps_struct*)malloc(sizeof(procmaps_struct));

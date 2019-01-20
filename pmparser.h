@@ -22,7 +22,10 @@ implied warranty.
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <linux/limits.h>
 
+//maximum line length in a procmaps file
+#define PROCMAPS_LINE_MAX_LENGTH  (PATH_MAX + 100) 
 /**
  * procmaps_struct
  * @desc hold all the information about an area in the process's  VM

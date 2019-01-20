@@ -82,6 +82,9 @@ procmaps_struct* pmparser_parse(int pid){
 		//printf("%s",buf);
 	}
 
+	//close file
+	fclose(file);
+
 
 	g_last_head=list_maps;
 	return list_maps;

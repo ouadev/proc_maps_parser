@@ -37,11 +37,9 @@ procmaps_struct* pmparser_parse(int pid){
 	procmaps_struct* list_maps=NULL;
 	procmaps_struct* tmp;
 	procmaps_struct* current_node=list_maps;
-	char addr1[20],addr2[20], perm[8], offset[20], dev[10],inode[30],pathname[600];
-	while(1){
-		if( (c=fgetc(file))==EOF ) break;
-		fgets(buf+1,PROCMAPS_LINE_MAX_LENGTH,file);
-		buf[0]=c;
+	char addr1[20],addr2[20], perm[8], offset[20], dev[10],inode[30],pathname[PATH_MAX];
+	while( !feof(file) ){
+		fgets(buf,PROCMAPS_LINE_MAX_LENGTH,file);
 		//allocate a node
 		tmp=(procmaps_struct*)malloc(sizeof(procmaps_struct));
 		//fill the node

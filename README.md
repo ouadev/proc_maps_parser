@@ -34,7 +34,7 @@ struct procmaps_struct{
 from ./examples/map.c
 ```C
   int pid=-1; //-1 to use the running process id, use pid>0 to list the map of another process
-  procmaps_struct* maps=pmparser_parse(pid);
+  procmaps_iterator* maps = pmparser_parse(pid);
 	if(maps==NULL){
 		printf ("[map]: cannot parse the memory map of %d\n",pid);
 		return -1;
@@ -42,7 +42,8 @@ from ./examples/map.c
 
 	//iterate over areas
 	procmaps_struct* maps_tmp=NULL;
-	while( (maps_tmp=pmparser_next())!=NULL){
+	
+	while( (maps_tmp = pmparser_next(maps)) != NULL){
 		pmparser_print(maps_tmp,0);
 		printf("\n~~~~~~~~~~~~~~~~~~~~~~~~~\n"); 
 	}

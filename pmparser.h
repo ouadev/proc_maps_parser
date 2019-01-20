@@ -51,23 +51,33 @@ typedef struct procmaps_struct{
 } procmaps_struct;
 
 /**
+ * procmaps_iterator
+ * @desc holds iterating information
+ */
+typedef struct procmaps_iterator{
+	procmaps_struct* head;
+	procmaps_struct* current;
+} procmaps_iterator;
+/**
  * pmparser_parse
  * @param pid the process id whose memory map to be parser. the current process if pid<0
- * @return list of procmaps_struct structers
+ * @return an iterator over all the nodes
  */
-procmaps_struct* pmparser_parse(int pid);
+procmaps_iterator* pmparser_parse(int pid);
 
 /**
  * pmparser_next
  * @description move between areas
+ * @param p_procmaps_it the iterator to move on step in the chained list
+ * @return a procmaps structure filled with information about this VM area
  */
-procmaps_struct* pmparser_next();
+procmaps_struct* pmparser_next(procmaps_iterator* p_procmaps_it);
 /**
  * pmparser_free
  * @description should be called at the end to free the resources
- * @param maps_list the head of the list to be freed
+ * @param p_procmaps_it the iterator structure returned by pmparser_parse
  */
-void pmparser_free(procmaps_struct* maps_list);
+void pmparser_free(procmaps_iterator* p_procmaps_it);
 
 /**
  * _pmparser_split_line

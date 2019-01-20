@@ -16,11 +16,12 @@ implied warranty.
 /**
  * gobal variables
  */
-procmaps_struct* g_last_head=NULL;
-procmaps_struct* g_current=NULL;
+//procmaps_struct* g_last_head=NULL;
+//procmaps_struct* g_current=NULL;
 
 
-procmaps_struct* pmparser_parse(int pid){
+procmaps_iterator* pmparser_parse(int pid){
+	procmaps_iterator* maps_it = malloc(sizeof(procmaps_iterator));
 	char maps_path[500];
 	if(pid>=0 ){
 		sprintf(maps_path,"/proc/%d/maps",pid);
@@ -84,24 +85,33 @@ procmaps_struct* pmparser_parse(int pid){
 	fclose(file);
 
 
-	g_last_head=list_maps;
-	return list_maps;
+	//g_last_head=list_maps;
+	maps_it->head = list_maps;
+	maps_it->current =  list_maps;
+	return maps_it;
 }
 
 
-procmaps_struct* pmparser_next(){
-	if(g_last_head==NULL) return NULL;
+procmaps_struct* pmparser_next(procmaps_iterator* p_procmaps_it){
+	if(p_procmaps_it->current == NULL)
+		return NULL;
+	procmaps_struct* p_current = p_procmaps_it->current;
+	p_procmaps_it->current = p_procmaps_it->current->next;
+	return p_current;
+	/*
 	if(g_current==NULL){
 		g_current=g_last_head;
 	}else
 		g_current=g_current->next;
 
 	return g_current;
+	*/
 }
 
 
 
-void pmparser_free(procmaps_struct* maps_list){
+void pmparser_free(procmaps_iterator* p_procmaps_it){
+	procmaps_struct* maps_list = p_procmaps_it->head;
 	if(maps_list==NULL) return ;
 	procmaps_struct* act=maps_list;
 	procmaps_struct* nxt=act->next;

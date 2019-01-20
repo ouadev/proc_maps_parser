@@ -10,7 +10,7 @@ int main(int argc, char* argv[]){
 	if(argc==2) pid=atoi(argv[1]);
 	else pid=-1;
 
-	procmaps_struct* maps=pmparser_parse(pid);
+	procmaps_iterator* maps = pmparser_parse(pid);
 	if(maps==NULL){
 		printf ("[map]: cannot parse the memory map of %d\n",pid);
 		return -1;
@@ -19,7 +19,7 @@ int main(int argc, char* argv[]){
 	//iterate over areas
 	procmaps_struct* maps_tmp=NULL;
 	
-	while( (maps_tmp=pmparser_next())!=NULL){
+	while( (maps_tmp = pmparser_next(maps)) != NULL){
 		pmparser_print(maps_tmp,0);
 		printf("\n~~~~~~~~~~~~~~~~~~~~~~~~~\n"); 
 	}

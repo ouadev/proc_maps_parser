@@ -30,6 +30,15 @@ struct procmaps_struct{
 }
 
 ```
+# Building
+After cloning, building this project is possible as follows:
+```
+$ cd [proc_maps_parser checkout]
+$ make # to build it as a static library
+$ make examples # to build both the static library and the example program
+```
+Optionally, the BUILD_DIR environment variable can be specified when running make to build the static library somewhere else. By default, this is set to a build/ directory in the root of the source tree.
+
 # Usage
 from ./examples/map.c
 ```C

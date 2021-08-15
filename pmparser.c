@@ -121,7 +121,7 @@ void pmparser_free(procmaps_iterator* p_procmaps_it){
 		if(nxt!=NULL)
 			nxt=nxt->next;
 	}
-
+	free(p_procmaps_it);
 }
 
 

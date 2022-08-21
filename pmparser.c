@@ -31,14 +31,15 @@ procmaps_iterator* pmparser_parse(int pid){
 	FILE* file=fopen(maps_path,"r");
 	if(!file){
 		fprintf(stderr,"pmparser : cannot open the memory maps, %s\n",strerror(errno));
+		free(maps_it);
 		return NULL;
 	}
 	int ind=0;char buf[PROCMAPS_LINE_MAX_LENGTH];
-	int c;
 	procmaps_struct* list_maps=NULL;
 	procmaps_struct* tmp;
 	procmaps_struct* current_node=list_maps;
-	char addr1[20],addr2[20], perm[8], offset[20], dev[10],inode[30],pathname[PATH_MAX];
+	char addr1[20],addr2[20], offset[20], dev[10],inode[30],pathname[PATH_MAX];
+	char perm[8] = {};
 	while( !feof(file) ){
 		if (fgets(buf,PROCMAPS_LINE_MAX_LENGTH,file) == NULL){
 			fprintf(stderr,"pmparser : fgets failed, %s\n",strerror(errno));
@@ -51,17 +52,20 @@ procmaps_iterator* pmparser_parse(int pid){
 		//printf("#%s",buf);
 		//printf("%s-%s %s %s %s %s\t%s\n",addr1,addr2,perm,offset,dev,inode,pathname);
 		//addr_start & addr_end
-		unsigned long l_addr_start;
+		*(long unsigned *)&tmp->addr_start = strtoul(addr1, &endptr, 16);
+		// assert(*addr1 && ! *endptr);
+		*(long unsigned *)&tmp->addr_end = strtoul(addr2, NULL, 16);
+		// assert(*addr2 && ! *endptr);
 		sscanf(addr1,"%lx",(long unsigned *)&tmp->addr_start );
 		sscanf(addr2,"%lx",(long unsigned *)&tmp->addr_end );
 		//size
 		tmp->length=(unsigned long)(tmp->addr_end-tmp->addr_start);
 		//perm
 		strcpy(tmp->perm,perm);
-		tmp->is_r=(perm[0]=='r');
-		tmp->is_w=(perm[1]=='w');
-		tmp->is_x=(perm[2]=='x');
-		tmp->is_p=(perm[3]=='p');
+		tmp->is_r=(int)(perm[0]=='r');
+		tmp->is_w=(int)(perm[1]=='w');
+		tmp->is_x=(int)(perm[2]=='x');
+		tmp->is_p=(int)(perm[3]=='p');
 
 		//offset
 		sscanf(offset,"%lx",&tmp->offset );

@@ -38,7 +38,8 @@ procmaps_iterator* pmparser_parse(int pid){
 	procmaps_struct* list_maps=NULL;
 	procmaps_struct* tmp;
 	procmaps_struct* current_node=list_maps;
-	char addr1[20],addr2[20], perm[8], offset[20], dev[10],inode[30],pathname[PATH_MAX];
+	char addr1[20],addr2[20], offset[20], dev[10],inode[30],pathname[PATH_MAX];
+	char perm[8] = {};
 	while( !feof(file) ){
 		if (fgets(buf,PROCMAPS_LINE_MAX_LENGTH,file) == NULL){
 			fprintf(stderr,"pmparser : fgets failed, %s\n",strerror(errno));

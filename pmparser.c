@@ -53,6 +53,10 @@ procmaps_iterator* pmparser_parse(int pid){
 		//printf("%s-%s %s %s %s %s\t%s\n",addr1,addr2,perm,offset,dev,inode,pathname);
 		//addr_start & addr_end
 		unsigned long l_addr_start;
+		*(long unsigned *)&tmp->addr_start = strtoul(addr1, &endptr, 16);
+		// assert(*addr1 && ! *endptr);
+		*(long unsigned *)&tmp->addr_end = strtoul(addr2, NULL, 16);
+		// assert(*addr2 && ! *endptr);
 		sscanf(addr1,"%lx",(long unsigned *)&tmp->addr_start );
 		sscanf(addr2,"%lx",(long unsigned *)&tmp->addr_end );
 		//size

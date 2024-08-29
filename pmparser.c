@@ -191,12 +191,20 @@ void _pmparser_split_line(
 	while(buf[i]=='\t' || buf[i]==' ')
 		i++;
 	orig=i;
-	while(buf[i]!='\t' && buf[i]!=' ' && buf[i]!='\n'){
+	// find end of line
+	while(buf[i]!='\r' && buf[i]!='\n' && buf[i]!='\0')
+		++i;
+	if (orig<i)
+		--i; // last character position
+	// trim spaces
+	while (orig<=i && (buf[i]==' ' || buf[i]=='\t'))
+		--i;
+	// copy in reverse order
+	pathname[i+1-orig]='\0';
+	while (orig<=i) {
 		pathname[i-orig]=buf[i];
-		i++;
+		--i;
 	}
-	pathname[i-orig]='\0';
-
 }
 
 void pmparser_print(procmaps_struct* map, int order){

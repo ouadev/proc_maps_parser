@@ -40,8 +40,14 @@ procmaps_iterator* pmparser_parse(int pid){
 	procmaps_struct* current_node=list_maps;
 	char addr1[20],addr2[20], perm[8], offset[20], dev[10],inode[30],pathname[PATH_MAX];
 	while( !feof(file) ){
-		if (fgets(buf,PROCMAPS_LINE_MAX_LENGTH,file) == NULL && errno){
-			fprintf(stderr,"pmparser : fgets failed, %s\n",strerror(errno));
+		char*result=fgets(buf,PROCMAPS_LINE_MAX_LENGTH,file);
+		int err=errno;
+		if (result == NULL && err){
+#if defined(__ANDROID__)
+			if (err == ENOTSOCK && feof(file) && !ferror(file))
+				break;
+#endif
+			fprintf(stderr,"pmparser : fgets failed, %s\n",strerror(err));
 			return NULL;
 		}
 		//allocate a node
